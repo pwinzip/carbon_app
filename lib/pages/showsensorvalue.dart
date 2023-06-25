@@ -5,6 +5,8 @@ import 'package:sensors_plus/sensors_plus.dart';
 
 import 'snake.dart';
 
+import 'dart:math' as math;
+
 class ShowSensorValue extends StatefulWidget {
   const ShowSensorValue({super.key});
 
@@ -21,6 +23,11 @@ class _ShowSensorValueState extends State<ShowSensorValue> {
   List<double>? _accelerometerValues;
   List<double>? _gyroscopeValues;
   List<double>? _magnetometerValues;
+
+  String xAngle = "";
+  String yAngle = "";
+  String zAngle = "";
+
   final _streamSubscriptions = <StreamSubscription<dynamic>>[];
 
   @override
@@ -56,12 +63,26 @@ class _ShowSensorValueState extends State<ShowSensorValue> {
               ),
             ),
           ),
+          // Padding(
+          //   padding: const EdgeInsets.all(16.0),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children: <Widget>[
+          //       Text('UserAccelerometer: $userAccelerometer'),
+          //     ],
+          //   ),
+          // ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text('Accelerometer: $accelerometer'),
+                Column(
+                  children: [
+                    Text("$xAngle, $yAngle, $zAngle"),
+                  ],
+                )
               ],
             ),
           ),
@@ -71,6 +92,15 @@ class _ShowSensorValueState extends State<ShowSensorValue> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Text('Gyroscope: $gyroscope'),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Text('Magetometer: $magnetometer'),
               ],
             ),
           ),
@@ -91,10 +121,47 @@ class _ShowSensorValueState extends State<ShowSensorValue> {
   void initState() {
     super.initState();
     _streamSubscriptions.add(
+      userAccelerometerEvents.listen(
+        (UserAccelerometerEvent event) {
+          setState(() {
+            _userAccelerometerValues = <double>[event.x, event.y, event.z];
+            // print("userACC: $_userAccelerometerValues");
+          });
+        },
+        onError: (e) {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return const AlertDialog(
+                  title: Text("Sensor Not Found"),
+                  content: Text(
+                      "It seems that your device doesn't support Accelerometer Sensor"),
+                );
+              });
+        },
+        cancelOnError: true,
+      ),
+    );
+    _streamSubscriptions.add(
       accelerometerEvents.listen(
         (AccelerometerEvent event) {
           setState(() {
             _accelerometerValues = <double>[event.x, event.y, event.z];
+            // Calculate angle
+            double x = event.x, y = event.y, z = event.z;
+            double normOfG = math.sqrt(
+                event.x * event.x + event.y * event.y + event.z * event.z);
+            x = event.x / normOfG;
+            y = event.y / normOfG;
+            z = event.z / normOfG;
+
+            double xInclination = -(math.asin(x) * (180 / math.pi));
+            double yInclination = (math.acos(y) * (180 / math.pi));
+            double zInclination = (math.atan(z) * (180 / math.pi));
+
+            xAngle = "${xInclination.round()}°";
+            yAngle = "${yInclination.round()}°";
+            zAngle = "${zInclination.round()}°";
           });
         },
         onError: (e) {
@@ -116,6 +183,7 @@ class _ShowSensorValueState extends State<ShowSensorValue> {
         (GyroscopeEvent event) {
           setState(() {
             _gyroscopeValues = <double>[event.x, event.y, event.z];
+            // print("gyro: $_gyroscopeValues");
           });
         },
         onError: (e) {
@@ -126,6 +194,28 @@ class _ShowSensorValueState extends State<ShowSensorValue> {
                   title: const Text("Sensor Not Found"),
                   content: Text(
                       "It seems that your device doesn't support Gyroscope Sensor ${e.toString()}"),
+                );
+              });
+        },
+        cancelOnError: true,
+      ),
+    );
+    _streamSubscriptions.add(
+      magnetometerEvents.listen(
+        (MagnetometerEvent event) {
+          setState(() {
+            _magnetometerValues = <double>[event.x, event.y, event.z];
+            // print("gyro: $_magnetometerValues");
+          });
+        },
+        onError: (e) {
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text("Sensor Not Found"),
+                  content: Text(
+                      "It seems that your device doesn't support Manetometer Sensor ${e.toString()}"),
                 );
               });
         },
