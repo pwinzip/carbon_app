@@ -29,7 +29,8 @@ class _ShowCameraState extends State<ShowCamera> with WidgetsBindingObserver {
   double? yInclination;
   double? zInclination;
 
-  bool _isbottomTaken = false;
+  bool _isTaken = false;
+
   double? topDegree;
   double? bottomDegree;
 
@@ -142,8 +143,8 @@ class _ShowCameraState extends State<ShowCamera> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final accelerometer =
-        _accelerometerValues?.map((double v) => v.toStringAsFixed(1)).toList();
+    // final accelerometer =
+    //     _accelerometerValues?.map((double v) => v.toStringAsFixed(1)).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -159,6 +160,21 @@ class _ShowCameraState extends State<ShowCamera> with WidgetsBindingObserver {
                       controller!.buildPreview(),
                       Center(child: drawHorizontalLine()),
                       Align(
+                        alignment: Alignment.topLeft,
+                        child: Container(
+                          margin: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(8.0),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          child: const Text(
+                            "ขั้นตอนที่ 1",
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      ),
+                      Align(
                         alignment: Alignment.bottomCenter,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -167,15 +183,10 @@ class _ShowCameraState extends State<ShowCamera> with WidgetsBindingObserver {
                               print(yInclination);
                               print(zInclination);
                               print("---------------");
-                              if (_isbottomTaken) {
-                                print("waiting for taking top view");
-                              } else {
-                                print("bottom view taken");
-                                setState(() {
-                                  _isbottomTaken = true;
-                                  bottomText = "ถ่ายภาพส่วนที่สูงสุดของต้นไม้";
-                                });
-                              }
+                              setState(() {
+                                _isTaken = true;
+                                bottomText = "ไปขั้นตอนถัดไป";
+                              });
                             },
                             style: ButtonStyle(
                               shape: MaterialStateProperty.all(
@@ -200,16 +211,38 @@ class _ShowCameraState extends State<ShowCamera> with WidgetsBindingObserver {
                           ),
                         ),
                       ),
+                      _isTaken
+                          ? Align(
+                              alignment: Alignment.bottomRight,
+                              child: Container(
+                                margin: const EdgeInsets.all(8.0),
+                                padding: const EdgeInsets.all(4.0),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12.0),
+                                  ),
+                                  child: IconButton(
+                                      onPressed: () {},
+                                      icon: const Icon(
+                                          Icons.arrow_forward_ios_rounded)),
+                                ),
+                              ),
+                            )
+                          : Align(
+                              alignment: Alignment.bottomRight,
+                              child: Container(),
+                            ),
                     ],
                   ),
                 ),
                 Expanded(
                   child: Container(
-                    color: Colors.lightGreen,
+                    color: Colors.white,
                     child: Center(
                       child: Text(
-                        "ถ่ายภาพส่วนที่ต่ำสุดของต้นไม้",
-                        style: TextStyle(color: Colors.white),
+                        bottomText,
+                        style: const TextStyle(color: Colors.black),
                       ),
                     ),
                   ),

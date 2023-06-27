@@ -13,15 +13,30 @@ class FirstPage extends StatefulWidget {
 }
 
 class _FirstPageState extends State<FirstPage> {
+  final TextEditingController _heightController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    print("%%%%%%%%");
-    print(widget.cameras);
     return Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Form(
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.8,
+                decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(10.0)),
+                child: TextFormField(
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(8.0))),
+                    suffixText: "เซนติเมตร",
+                    labelText: "ส่วนสูง",
+                  ),
+                  controller: _heightController,
+                ),
+              ),
+            ),
             ElevatedButton(
                 onPressed: () {
                   Navigator.push(
