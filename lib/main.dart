@@ -1,7 +1,9 @@
-import 'package:carbonapp/pages/firstpage.dart';
+// import 'package:carbonapp/pages/firstpage.dart';
+import 'package:carbonapp/pages/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:camera/camera.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 List<CameraDescription> cameras = [];
 
@@ -29,12 +31,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        textTheme: GoogleFonts.promptTextTheme(),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF91CA6B)),
+        // primaryColor: Colors.blue,
         useMaterial3: true,
       ),
-      home: FirstPage(cameras: cameras),
+      home: HomePage(cameras: cameras),
     );
   }
 }

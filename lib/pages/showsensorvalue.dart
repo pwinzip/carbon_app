@@ -19,7 +19,7 @@ class _ShowSensorValueState extends State<ShowSensorValue> {
   static const int _snakeColumns = 20;
   static const double _snakeCellSize = 10.0;
 
-  List<double>? _userAccelerometerValues;
+  // List<double>? _userAccelerometerValues;
   List<double>? _accelerometerValues;
   List<double>? _gyroscopeValues;
   List<double>? _magnetometerValues;
@@ -32,9 +32,9 @@ class _ShowSensorValueState extends State<ShowSensorValue> {
 
   @override
   Widget build(BuildContext context) {
-    final userAccelerometer = _userAccelerometerValues
-        ?.map((double v) => v.toStringAsFixed(1))
-        .toList();
+    // final userAccelerometer = _userAccelerometerValues
+    //     ?.map((double v) => v.toStringAsFixed(1))
+    //     .toList();
     final accelerometer =
         _accelerometerValues?.map((double v) => v.toStringAsFixed(1)).toList();
     final gyroscope =
@@ -120,28 +120,28 @@ class _ShowSensorValueState extends State<ShowSensorValue> {
   @override
   void initState() {
     super.initState();
-    _streamSubscriptions.add(
-      userAccelerometerEvents.listen(
-        (UserAccelerometerEvent event) {
-          setState(() {
-            _userAccelerometerValues = <double>[event.x, event.y, event.z];
-            // print("userACC: $_userAccelerometerValues");
-          });
-        },
-        onError: (e) {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return const AlertDialog(
-                  title: Text("Sensor Not Found"),
-                  content: Text(
-                      "It seems that your device doesn't support Accelerometer Sensor"),
-                );
-              });
-        },
-        cancelOnError: true,
-      ),
-    );
+    // _streamSubscriptions.add(
+    //   userAccelerometerEvents.listen(
+    //     (UserAccelerometerEvent event) {
+    //       setState(() {
+    //         _userAccelerometerValues = <double>[event.x, event.y, event.z];
+    //         // print("userACC: $_userAccelerometerValues");
+    //       });
+    //     },
+    //     onError: (e) {
+    //       showDialog(
+    //           context: context,
+    //           builder: (context) {
+    //             return const AlertDialog(
+    //               title: Text("Sensor Not Found"),
+    //               content: Text(
+    //                   "It seems that your device doesn't support Accelerometer Sensor"),
+    //             );
+    //           });
+    //     },
+    //     cancelOnError: true,
+    //   ),
+    // );
     _streamSubscriptions.add(
       accelerometerEvents.listen(
         (AccelerometerEvent event) {
