@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:carbonapp/pages/calcarbonpage.dart';
 import 'package:carbonapp/pages/camerapage.dart';
 import 'package:flutter/material.dart';
 
@@ -134,6 +135,11 @@ class _HomePageState extends State<HomePage> {
                     InkWell(
                       onTap: () {
                         print("calculate carbon");
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const CalCarbonPage(),
+                            ));
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width * 0.42,
